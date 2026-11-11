@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const spacing = 8;
         let globalMouse = { x: -1000, y: -1000 };
         let targetGlobalMouse = { x: -1000, y: -1000 };
-        
+
         const resizeCanvas = () => {
             globalCanvas.width = window.innerWidth;
             globalCanvas.height = window.innerHeight;
@@ -175,33 +175,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         };
-        
+
         window.addEventListener('resize', resizeCanvas);
         document.addEventListener('mousemove', (e) => {
             targetGlobalMouse.x = e.clientX;
             targetGlobalMouse.y = e.clientY;
         });
-        
+
         resizeCanvas();
-        
+
         const animateCanvas = () => {
             globalMouse.x += (targetGlobalMouse.x - globalMouse.x) * 0.2;
             globalMouse.y += (targetGlobalMouse.y - globalMouse.y) * 0.2;
-            
+
             ctx.clearRect(0, 0, globalCanvas.width, globalCanvas.height);
-            
+
             // Dynamically change dot color based on hero dark mode state
             const isDark = document.documentElement.style.getPropertyValue('--white-bg-opacity') === '1';
             ctx.fillStyle = isDark ? '#ffffff' : '#111111';
-            
+
             const visibilityRadius = window.innerWidth * 0.07813; // Matches 7.813vw
             const repulsionRadius = visibilityRadius * 0.6; // Smaller repulsion radius
             const visRadSq = visibilityRadius * visibilityRadius;
-            
+
             for (let i = 0; i < dots.length; i++) {
                 const dot = dots[i];
                 const dx = globalMouse.x - dot.baseX;
-                
+
                 // Fast AABB check to skip distant dots
                 if (Math.abs(dx) > visibilityRadius + 50) {
                     dot.x = dot.baseX;
@@ -214,16 +214,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     dot.y = dot.baseY;
                     continue;
                 }
-                
+
                 const distSq = dx * dx + dy * dy;
-                
+
                 if (distSq < visRadSq) {
                     const dist = Math.sqrt(distSq);
                     const opacity = Math.max(0, 1 - (dist / visibilityRadius));
-                    
+
                     let offsetX = 0;
                     let offsetY = 0;
-                    
+
                     // Repulsion logic
                     if (dist < repulsionRadius && dist > 0.1) {
                         const force = (repulsionRadius - dist) / repulsionRadius;
@@ -231,11 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         offsetX = (dx / dist) * -pushDistance;
                         offsetY = (dy / dist) * -pushDistance;
                     }
-                    
+
                     // Spring physics
                     dot.x += ((dot.baseX + offsetX) - dot.x) * 0.3;
                     dot.y += ((dot.baseY + offsetY) - dot.y) * 0.3;
-                    
+
                     ctx.globalAlpha = opacity * 0.7; // Reduced opacity for subtlety
                     ctx.fillRect(dot.x - 0.8, dot.y - 0.8, 1.6, 1.6); // Slightly smaller dot
                 } else {
@@ -510,14 +510,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.body.style.overflow = 'hidden';
                             smoothScrollTo(targetY, 800);
 
-                            
+
                             animateComparisonTable();
-                            
+
                             // Unlock scroll after animation finishes (~5650ms)
                             setTimeout(() => {
                                 document.body.style.overflow = '';
                             }, 5800);
-                            
+
                             compObserver.unobserve(entry.target);
                         }
                     });
@@ -624,14 +624,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             document.body.style.overflow = 'hidden';
                             smoothScrollTo(targetY, 800);
 
-                            
+
                             animateSequence();
-                            
+
                             // Unlock scroll after animation finishes (last card traced at ~5700ms)
                             setTimeout(() => {
                                 document.body.style.overflow = '';
                             }, 5800);
-                            
+
                             processObserver.unobserve(entry.target);
                         }
                     });
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const animatedClientsGrid = document.getElementById('clients-grid-animated');
     if (animatedClientsGrid) {
         const clientCards = Array.from(animatedClientsGrid.querySelectorAll('.client-card-animated'));
-        
+
         // 7 slots. 
         // 0-2: Left column (top, mid, bot)
         // 3: Center column
@@ -1035,42 +1035,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('global-heading-canvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        
+
         // Define all headings
         const heroTitle = document.querySelector('.hero-title');
         const sectionTitles = Array.from(document.querySelectorAll('.section-title'));
         const allHeadings = [heroTitle, ...sectionTitles].filter(Boolean);
-        
-        let particles = []; 
-        let targetsByHeading = []; 
-        let repelElements = []; 
-        
+
+        let particles = [];
+        let targetsByHeading = [];
+        let repelElements = [];
+
         let mouse = { x: -1000, y: -1000, radius: window.innerWidth * 0.08 };
-        
+
         document.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
         });
-        
+
         function getTargetsForHeading(heading, step) {
             const hRect = heading.getBoundingClientRect();
             if (hRect.width === 0) return [];
-            
+
             // Clone heading for safe mutation
             const clone = heading.cloneNode(true);
             clone.style.position = 'fixed';
             clone.style.top = '0px';
             clone.style.left = '0px';
             clone.style.visibility = 'hidden';
-            clone.style.width = hRect.width + 'px'; 
+            clone.style.width = hRect.width + 'px';
             clone.style.margin = '0px';
             document.body.appendChild(clone);
-            
+
             // Wrap text nodes in clone
             const walker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT, null, false);
             const textNodes = [];
             let node;
-            while(node = walker.nextNode()) textNodes.push(node);
+            while (node = walker.nextNode()) textNodes.push(node);
             textNodes.forEach(n => {
                 if (n.nodeValue.trim().length > 0) {
                     const span = document.createElement('span');
@@ -1079,42 +1079,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     n.parentNode.replaceChild(span, n);
                 }
             });
-            
+
             let headingTargets = [];
             const spans = clone.querySelectorAll('.particle-measure-span');
             spans.forEach(span => {
                 const sRect = span.getBoundingClientRect();
                 if (sRect.width === 0 || sRect.height === 0) return;
-                
+
                 const styles = window.getComputedStyle(span);
                 const fontSize = parseFloat(styles.fontSize) || 16;
-                
+
                 // Add padding to prevent clipping due to line-height or font bounding box
                 const paddingX = fontSize * 0.2;
                 const paddingY = fontSize * 0.6;
-                
+
                 const offCanvas = document.createElement('canvas');
                 offCanvas.width = sRect.width + paddingX * 2;
                 offCanvas.height = sRect.height + paddingY * 2;
                 const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
-                
+
                 offCtx.font = `${styles.fontWeight} ${styles.fontSize} ${styles.fontFamily}`;
                 offCtx.letterSpacing = styles.letterSpacing;
                 offCtx.fillStyle = '#ffffff';
                 offCtx.textBaseline = 'middle';
                 offCtx.textAlign = 'left';
-                
+
                 // Draw exactly centered vertically, offset by paddingX horizontally
-                offCtx.fillText(span.textContent, paddingX, offCanvas.height / 2); 
+                offCtx.fillText(span.textContent, paddingX, offCanvas.height / 2);
                 const imgData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height).data;
-                
+
                 // Calculate local offsets relative to the heading's top-left corner
                 // Since the clone is at fixed top:0, left:0, sRect directly gives local offsets
                 // We subtract a small optical nudge (12% of height) to perfectly vertically center the text
-                const opticalNudge = sRect.height * 0.12; 
+                const opticalNudge = sRect.height * 0.12;
                 const localOffsetX = sRect.left - paddingX;
                 const localOffsetY = sRect.top + (sRect.height / 2) - (offCanvas.height / 2) - opticalNudge;
-                
+
                 for (let y = 0; y < offCanvas.height; y += step) {
                     for (let x = 0; x < offCanvas.width; x += step) {
                         const alpha = imgData[(y * offCanvas.width + x) * 4 + 3];
@@ -1127,43 +1127,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            
+
             document.body.removeChild(clone);
             return headingTargets;
         }
-        
+
         function measureHeadings() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
+
             const step = Math.max(5, Math.floor(window.innerWidth / 250));
             targetsByHeading = [];
             let maxParticlesNeeded = 0;
-            
+
             repelElements = Array.from(document.querySelectorAll('.service-card, .detail-card, .client-card, .step-card, .comparison-table, .review-card, .faq-item'));
-            
+
             allHeadings.forEach((heading) => {
                 const wasHidden = heading.classList.contains('hide-text');
-                if(wasHidden) heading.classList.remove('hide-text');
-                
+                if (wasHidden) heading.classList.remove('hide-text');
+
                 const headingTargets = getTargetsForHeading(heading, step);
                 targetsByHeading.push(headingTargets);
-                
+
                 if (headingTargets.length > maxParticlesNeeded) {
                     maxParticlesNeeded = headingTargets.length;
                 }
-                
-                if(wasHidden) heading.classList.add('hide-text');
+
+                if (wasHidden) heading.classList.add('hide-text');
             });
-            
+
             // Initialize global particle pool or append if more are needed
             if (targetsByHeading.length > 0) {
                 const heroTargets = targetsByHeading[0];
                 const hRect = allHeadings[0].getBoundingClientRect();
-                
+
                 while (particles.length < maxParticlesNeeded) {
                     const idx = particles.length;
-                    const t = heroTargets[idx % heroTargets.length] || {localX: 0, localY: 0};
+                    const t = heroTargets[idx % heroTargets.length] || { localX: 0, localY: 0 };
                     particles.push({
                         x: hRect.left + t.localX,
                         y: hRect.top + t.localY,
@@ -1175,37 +1175,37 @@ document.addEventListener('DOMContentLoaded', () => {
                         transitPhase: Math.random() * Math.PI * 2
                     });
                 }
-                
+
                 // Update sizes in case step changed on resize
                 particles.forEach(p => p.size = step * 0.55);
             }
         }
-        
+
         function getActiveHeadingIndex() {
             let closestHeadingIdx = -1;
             let minDistance = Infinity;
-            
+
             const contentBelow = document.getElementById('content-below');
             const contentTop = contentBelow ? contentBelow.getBoundingClientRect().top : window.innerHeight;
-            
+
             allHeadings.forEach((heading, idx) => {
                 const rect = heading.getBoundingClientRect();
                 const headingCenter = rect.top + rect.height / 2;
-                
+
                 // If contentBelow has scrolled up high enough to cover the hero text, ignore the hero text
                 if (idx === 0 && contentTop < headingCenter) {
-                    return; 
+                    return;
                 }
-                
+
                 const screenCenter = window.innerHeight / 2;
                 const dist = Math.abs(headingCenter - screenCenter);
-                
+
                 if (dist < minDistance) {
                     minDistance = dist;
                     closestHeadingIdx = idx;
                 }
             });
-            
+
             // Snap to heading if it is within 40% of the screen height from center
             if (minDistance > window.innerHeight * 0.4) {
                 return -1; // Split/Transit state
@@ -1216,7 +1216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function animate() {
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             const repelRects = [];
             repelElements.forEach(el => {
                 const rect = el.getBoundingClientRect();
@@ -1229,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             });
-            
+
             const activeIdxResolved = getActiveHeadingIndex();
             // Dynamic color logic: Hero section uses dynamic text color, rest is white
             if (activeIdxResolved === 0) {
@@ -1238,34 +1238,34 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 ctx.fillStyle = '#ffffff';
             }
-            
+
             const activeTargets = activeIdxResolved >= 0 ? targetsByHeading[activeIdxResolved] : null;
             let activeRect = null;
             if (activeIdxResolved >= 0) {
                 activeRect = allHeadings[activeIdxResolved].getBoundingClientRect();
             }
-            
+
             const time = Date.now() * 0.0003; // Slower wave motion for left/right particles
-            
+
             particles.forEach((p, i) => {
                 let targetX, targetY;
-                
+
                 if (activeTargets && i < activeTargets.length) {
                     // Form the heading text dynamically based on current live position
                     const t = activeTargets[i];
                     targetX = activeRect.left + t.localX;
-                    targetY = activeRect.top + t.localY; 
+                    targetY = activeRect.top + t.localY;
                 } else {
                     // Transit state: Float organically in the left/right empty space margins
                     const isLeft = i % 2 === 0;
-                    
+
                     // Spread horizontally in the 10% margins using the particle's fixed random hash
                     const marginWidth = window.innerWidth * 0.12;
                     targetX = isLeft ? (p.transitX * marginWidth) : (window.innerWidth - marginWidth + p.transitX * marginWidth);
-                    
+
                     // Add a gentle floating wave motion
-                    targetY = (p.transitY * window.innerHeight) + Math.sin(time + p.transitPhase) * 40; 
-                    
+                    targetY = (p.transitY * window.innerHeight) + Math.sin(time + p.transitPhase) * 40;
+
                     // Dodge cards (repel logic)
                     repelRects.forEach(rect => {
                         if (targetX > rect.left && targetX < rect.right && targetY > rect.top && targetY < rect.bottom) {
@@ -1277,38 +1277,38 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 }
-                
+
                 // Repel from mouse
                 let dx = mouse.x - p.x;
                 let dy = mouse.y - p.y;
                 let dist = Math.sqrt(dx * dx + dy * dy);
-                
+
                 if (dist < mouse.radius) {
                     const force = (mouse.radius - dist) / mouse.radius;
                     const angle = Math.atan2(dy, dx);
                     p.vx -= Math.cos(angle) * force * 1.5; // Reduced repel force for smoother feel
                     p.vy -= Math.sin(angle) * force * 1.5;
                 }
-                
+
                 // Spring towards target (premium, slow, smooth spring)
                 const isForming = activeTargets && i < activeTargets.length;
                 const springForce = isForming ? 0.003 : 0.001; // Ultra slow and soft
                 p.vx += (targetX - p.x) * springForce;
                 p.vy += (targetY - p.y) * springForce;
-                
+
                 // Friction (more glide, settles smoothly)
                 p.vx *= 0.92;
                 p.vy *= 0.92;
-                
+
                 p.x += p.vx;
                 p.y += p.vy;
-                
+
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fill();
             });
         }
-        
+
         // Wait briefly for layout/fonts to settle before measuring
         setTimeout(() => {
             measureHeadings();
@@ -1316,7 +1316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             canvas.style.opacity = '1';
             animate();
         }, 1200);
-        
+
         let resizeTimeout;
         window.addEventListener('resize', () => {
             mouse.radius = window.innerWidth * 0.08;
@@ -1326,7 +1326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 300);
         });
     }
-    
+
     const globalHeadingCanvas = document.getElementById('global-heading-canvas');
     if (globalHeadingCanvas) {
         globalHeadingCanvas.style.opacity = '0';
